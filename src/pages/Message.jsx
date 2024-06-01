@@ -24,7 +24,7 @@ const Message = () => {
         dispatch(messageApi.util.invalidateTags(["Messages"]));
         setSocketMessage(message);
       });
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line no-unused-vars
       socket.on("reciveUnsentMessage", (message) => {
         dispatch(userApi.util.invalidateTags(["Participants"]));
         dispatch(messageApi.util.invalidateTags(["Messages"]));

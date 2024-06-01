@@ -3,11 +3,14 @@ import { useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useLoginMutation } from "../fetures/auth/authApi";
 import LoginFrom from "../components/login/LoginFrom";
+import { useDispatch } from "react-redux";
+import { userApi } from "../fetures/user/userApi";
+import { messageApi } from "../fetures/message/messageApi";
 
 const Login = () => {
   const [login, { data, isLoading, error }] = useLoginMutation();
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.target;
@@ -19,7 +22,7 @@ const Login = () => {
 
   useEffect(() => {
     if (error) {
-      console.log(error)
+      console.log(error);
       const errorResponse = error;
       toast.error(
         errorResponse?.data?.message || "An unexpected error occurred",
@@ -28,12 +31,14 @@ const Login = () => {
         }
       );
     } else if (data?.data?.token) {
+      dispatch(userApi.util.invalidateTags(["Participants"]));
+      dispatch(messageApi.util.invalidateTags(["Messages"]));
       toast.success(data?.message, {
         duration: 5000,
       });
       navigate("/message");
     }
-  }, [data, error, navigate]);
+  }, [data, dispatch, error, navigate]);
 
   return (
     <>
